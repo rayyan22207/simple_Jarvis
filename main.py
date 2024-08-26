@@ -1,10 +1,14 @@
 import conditions
+import loop_break
 
+t = 0
 def main():
-    input_value = input("Enter a value: ")
-    result = conditions.condtion(input_value)
-    print(result)
-
+    while t < 3:
+        user_input = input("Enter a value: ")
+        result = conditions.condtion(user_input)
+        print(result)
+        t +1
+        
 
 
 

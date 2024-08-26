@@ -1,4 +1,4 @@
-def condtion(value):
+def condition(value):
     if value == "Hello":
         return "Hello"
     elif (value == "Weather" or value == "what is the weather"):

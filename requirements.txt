@@ -1,7 +1,3 @@
-"""Im building this with the help of chatgpt and other sources as also learning to do it
-So you can follow along tho this a side project so it will be extremly slow"""
-
-
 certifi==2024.8.30
 charset-normalizer==3.3.2
 comtypes==1.4.7

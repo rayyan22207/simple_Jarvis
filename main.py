@@ -16,6 +16,9 @@ def speak(text):
 # Initialize speech recognizer
 recognizer = sr.Recognizer()
 
+# Flag to track if the weather question has been asked before
+weather_asked = False
+
 # Function to listen for a specific wake word
 def listen():
     with sr.Microphone() as source:
@@ -34,6 +37,7 @@ def listen():
             return None
 
 def main():
+    global weather_asked
     speak(f"Hello, I am {ASSISTANT_NAME}. How can I help you today?")
     while True:
         # Detect if there's any voice activity
@@ -48,7 +52,11 @@ def main():
                     if "hello" in command:
                         speak(f"Hello! How can I assist you?")
                     elif any(word in command for word in ["weather", "temperature", "forecast"]):
-                        speak("Look outside, you lazy thing!")
+                        if not weather_asked:
+                            speak("Look outside, you lazy thing!")
+                            weather_asked = True
+                        else:
+                            speak("Okay, if you insist. It's sunny, happy now? Ugh.")
                     elif "exit" in command:
                         speak("Goodbye!")
                         break

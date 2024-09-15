@@ -1,8 +1,6 @@
 import speech_recognition as sr
 import pyttsx3
-from openai import OpenAI
 import requests
-from _key import key_openai
 
 # Initialize text-to-speech engine
 engine = pyttsx3.init()
@@ -11,11 +9,8 @@ engine = pyttsx3.init()
 ASSISTANT_NAME = "Jarvis"
 
 # OpenWeatherMap API key and endpoint
-API_KEY = "your-weather-api-key"  # Replace with your actual API key
+API_KEY = "a3631ab2a77540c191c205140241409"  # Replace with your actual API key
 WEATHER_URL = "http://api.weatherapi.com/v1/current.json"
-
-# OpenAI API key
-OpenAI.api_key = key_openai
 
 # Function to speak text
 def speak(text):
@@ -28,9 +23,8 @@ recognizer = sr.Recognizer()
 # Flag to track if the weather question has been asked before
 weather_asked = False
 
-# Function to get weather from OpenWeatherMap
-def get_weather():
-    city = "Karachi"  # Replace with your city
+# Function to get weather from WeatherAPI
+def get_weather(city="Karachi"):
     params = {
         'key': API_KEY,
         'q': city
@@ -44,23 +38,13 @@ def get_weather():
     else:
         return "I could not retrieve the weather information."
 
-# Function to get a response from ChatGPT
-def get_chatgpt_response(prompt):
-    client = OpenAI()
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
-    return response['choices'][0]['message']['content']
-
 # Function to listen for a specific wake word
 def listen():
     with sr.Microphone() as source:
         recognizer.adjust_for_ambient_noise(source, duration=1)
         print("Listening...")
         audio = recognizer.listen(source)
+        print(audio)
         try:
             text = recognizer.recognize_google(audio)
             print(f"You said: {text}")
@@ -73,7 +57,7 @@ def listen():
 
 def main():
     global weather_asked
-    speak(f"Hello, I am {ASSISTANT_NAME}. How can I help you today?")
+    speak(f"Hello, I am {ASSISTANT_NAME} the AI assistant from Iron Man. How can I help you today?")
     while True:
         with sr.Microphone() as source:
             recognizer.adjust_for_ambient_noise(source, duration=1)
@@ -90,14 +74,20 @@ def main():
                             speak("Look outside, you lazy thing!")
                             weather_asked = True
                         else:
-                            weather_info = get_weather()
+                            # Check if a city name is mentioned in the command
+                            words = command.split()
+                            city = "Karachi"  # Default city
+                            for word in words:
+                                if word.capitalize() in ["Karachi", "Lahore", "Islamabad", "New York", "London"]:  # Add more city names as needed
+                                    city = word.capitalize()
+                                    break
+                            weather_info = get_weather(city)
                             speak(f"Okay, if you insist. {weather_info}, happy now? Ugh.")
                     elif "exit" in command:
                         speak("Goodbye!")
                         break
                     else:
-                        chat_response = get_chatgpt_response(command)
-                        speak(chat_response)
+                        speak(f"You said {command}")
                 else:
                     print("Waiting for the wake word...")
             except sr.UnknownValueError:

@@ -5,7 +5,7 @@ import requests
 # Initialize text-to-speech engine
 engine = pyttsx3.init()
 
-# Set the name of the assistant
+# Set the name of the assistant 
 ASSISTANT_NAME = "Jarvis"
 
 # OpenWeatherMap API key and endpoint
